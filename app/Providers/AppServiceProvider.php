@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Database\Eloquent\Builder;
+
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Register any application services.
+     */
+    public function register(): void
+    {
+        Builder::macro('getOrPaginate', function (int $maxResults = 500, int $defaultSize = 50) {
+            /**
+             * @var Builder<Model>
+             */
+            $query = $this;
+            if (request()->has('paginate')) {
+                $size = (int) request()->input('page_size', $defaultSize);
+                $size = $size > $maxResults || $size < 1 ? $maxResults : $size;
+                return $query->paginate($size);
+            } else {
+                return $query->get();
+            }
+        });
+    }
+
+    /**
+     * Bootstrap any application services.
+     */
+    public function boot(): void
+    {
+        //
+    }
+}
