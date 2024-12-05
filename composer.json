@@ -12,7 +12,9 @@
         "php": "^8.2",
         "laravel/framework": "^11.31",
         "laravel/sanctum": "^4.0",
+        "laravel/socialite": "^5.16",
         "laravel/tinker": "^2.9",
+        "socialiteproviders/discord": "^4.2",
         "spatie/laravel-query-builder": "^6.2"
     },
     "require-dev": {

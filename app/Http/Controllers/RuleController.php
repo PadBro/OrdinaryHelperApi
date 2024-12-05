@@ -2,21 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
-use App\Models\Faq;
-use App\Http\Requests\StoreFaqRequest;
-use App\Http\Requests\UpdateFaqRequest;
+use App\Models\Rule;
+use App\Http\Requests\StoreRuleRequest;
+use App\Http\Requests\UpdateRuleRequest;
 
-class FaqsController extends Controller
+class RuleController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return QueryBuilder::for(Faq::class)
+        return QueryBuilder::for(Rule::class)
             ->allowedFilters([
                 AllowedFilter::exact('id'),
             ])
@@ -26,25 +25,25 @@ class FaqsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreFaqRequest $request)
+    public function store(StoreRuleRequest $request)
     {
-        return Faq::create($request->validated());
+        return Rule::create($request->validated());
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateFaqRequest $request, Faq $faq)
+    public function update(UpdateRuleRequest $request, Rule $rule)
     {
-        $faq->update($request->validated());
-        return $faq->refresh();
+        $rule->update($request->validated());
+        return $rule->refresh();
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Faq $faq)
+    public function destroy(Rule $rule)
     {
-        return $faq->delete();
+        return $rule->delete();
     }
 }
