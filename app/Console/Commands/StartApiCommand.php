@@ -27,6 +27,6 @@ class StartApiCommand extends Command
     public function handle()
     {
         Artisan::call("migrate");
-        Artisan::call("serve");
+        Artisan::call("serve --port=8706");
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\JsonResponse;
 use Laravel\Socialite\Facades\Socialite;
+use App\Models\User;
 
 class DiscordController extends Controller
 {
@@ -15,31 +16,23 @@ class DiscordController extends Controller
     }
     public function callback(Request $request): JsonResponse
     {
-        $user = Socialite::driver('discord')->user();
-        dd($user);
+        $user = Socialite::driver('discord')->stateless()->user();
 
-        // $user = User::updateOrCreate([
-        //     'email' => $user->email,
-        // ], [
-        //     'name' => $user->name,
-        // ]);
-        // if ($user->wasRecentlyCreated) {
-        //     $user->email_verified_at = now();
-        //     /**
-        //      * @var Team
-        //      */
-        //     $team = Team::find(config('services.authentik.registration_team_id'));
-        //     $user->teams()->attach($team, [
-        //         'role' => Team::ROLE['member'],
-        //     ]);
-        //     $user->current_team_id = $team->id;
-        //     $user->save();
-        // }
+        $user = User::updateOrCreate([
+            'discord_id' => $user->id,
+        ], [
+            'name' => $user->name,
+            'nickname' => $user->nickname,
+            'email' => $user->email,
+            'avatar' => $user->avatar,
+            'discord_token' => $user->token,
+            'discord_refresh_token' => $user->refreshToken,
+        ]);
 
-        // Auth::guard('web')->login($user);
+        Auth::guard('web')->login($user);
 
-        // $request->session()->regenerate();
+        $request->session()->regenerate();
 
-        return response()->json([$user], 204);
+        return response()->json([], 204);
     }
 }

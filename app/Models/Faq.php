@@ -12,10 +12,5 @@ class Faq extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $guarded = ['id', 'created_at', 'udpated_at'];
 }
