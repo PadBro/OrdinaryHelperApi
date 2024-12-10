@@ -14,17 +14,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        Builder::macro('getOrPaginate', function (int $maxResults = 500, int $defaultSize = 50) {
+        Builder::macro('getOrPaginate', function (int $maxResults = 500, int $defaultSize = 25) {
             /**
              * @var Builder<Model>
              */
             $query = $this;
-            if (request()->has('paginate')) {
+            if (request()->has('full')) {
+                return $query->get();
+            } else {
                 $size = (int) request()->input('page_size', $defaultSize);
                 $size = $size > $maxResults || $size < 1 ? $maxResults : $size;
                 return $query->paginate($size);
-            } else {
-                return $query->get();
             }
         });
     }
@@ -38,10 +38,17 @@ class AppServiceProvider extends ServiceProvider
             $event->extendSocialite('discord', \SocialiteProviders\Discord\Provider::class);
         });
 
-        Http::macro('discord', function (?string $token) {
+        Http::macro('discord', function (?string $token = null) {
+            $bearerToken = $token ?? auth()->user()?->discord_token ?? '';
             return Http::withHeaders([
-                'Authorization' => 'Bearer '. $token ?? auth()->user()?->discord_token ?? '',
-            ])->baseUrl('https://discord.com/api');
+                'Authorization' => 'Bearer '. $bearerToken,
+            ])->baseUrl('https://discord.com/api/v10');
+        });
+
+        Http::macro('discordBot', function () {
+            return Http::withHeaders([
+                'Authorization' => 'Bot '. config('services.discord.bot_token'),
+            ])->baseUrl('https://discord.com/api/v10');
         });
     }
 }

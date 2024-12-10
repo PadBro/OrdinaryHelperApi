@@ -43,5 +43,9 @@ return [
         // optional
         'allow_gif_avatars' => (bool)env('DISCORD_AVATAR_GIF', true),
         'avatar_default_extension' => env('DISCORD_EXTENSION_DEFAULT', 'png'), // only pick from jpg, png, webp
+
+        'server_id' => env('DISCORD_SERVER_ID'),
+        'required_role' => env('DISCORD_REQUIRED_ROLE'),
+        'bot_token' => env('DISCORD_BOT_TOKEN'),
     ],
 ];

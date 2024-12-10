@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('discord_id')->unique();
             $table->string('nickname')->nullable();
             $table->string('name');
-            $table->string('email')->unique();
             $table->string('avatar');
             $table->string('discord_token');
             $table->string('discord_refresh_token');

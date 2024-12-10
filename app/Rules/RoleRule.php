@@ -1,0 +1,26 @@
+<?php
+
+namespace App\Rules;
+
+use Closure;
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Support\Facades\Http;
+
+class RoleRule implements ValidationRule
+{
+    public $discordChannelLinkBase = 'https://discord.com/channels/';
+    public $discordCanaryChannelLinkBase = 'https://canary.discord.com/channels/';
+    /**
+     * Run the validation rule.
+     *
+     * @param  \Closure(string, ?string=): \Illuminate\Translation\PotentiallyTranslatedString  $fail
+     */
+    public function validate(string $attribute, mixed $value, Closure $fail): void
+    {
+        $response = Http::discordBot()->get("/guilds/".config("services.discord.server_id")."/roles/".$value);
+        if (!$response->successful()) {
+            $fail("The provided :attribute was not found.");
+            return;
+        }
+    }
+}

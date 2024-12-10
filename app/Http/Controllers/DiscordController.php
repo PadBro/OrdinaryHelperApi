@@ -19,20 +19,15 @@ class DiscordController extends Controller
     {
         $user = Socialite::driver('discord')->stateless()->user();
 
-        $response = Http::discord($user->token)->get('/users/@me/guilds/1216052687645184010/member');
+        $response = Http::discord($user->token)->get('/users/@me/guilds/'.config('services.discord.server_id').'/member');
         $json = $response->json();
 
-        if (!$json || !$json['roles']) {
-            abort(401, "not on server");
+        if (!$json || !isset($json['roles'])) {
+            abort(404);
         }
-        $roles = [
-            '1216109838183043143', // owner
-            '1216109903093956728', // moderator
-            '1216109903022919790', // administrator
-        ];
-        $allowedUserRoles = array_intersect($json['roles'], $roles);
-        if (count($allowedUserRoles) <= 0) {
-            abort(401, "no roles");
+
+        if (!in_array(config('services.discord.required_role'), $json['roles'])) {
+            abort(404);
         }
 
         $user = User::updateOrCreate([
@@ -40,7 +35,6 @@ class DiscordController extends Controller
         ], [
             'name' => $user->name,
             'nickname' => $user->nickname,
-            'email' => $user->email,
             'avatar' => $user->avatar,
             'discord_token' => $user->token,
             'discord_refresh_token' => $user->refreshToken,

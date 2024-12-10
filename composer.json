@@ -14,10 +14,12 @@
         "laravel/sanctum": "^4.0",
         "laravel/socialite": "^5.16",
         "laravel/tinker": "^2.9",
+        "p3k/emoji-detector": "^1.2",
         "socialiteproviders/discord": "^4.2",
         "spatie/laravel-query-builder": "^6.2"
     },
     "require-dev": {
+        "beyondcode/laravel-dump-server": "^2.0",
         "fakerphp/faker": "^1.23",
         "laravel/pail": "^1.1",
         "laravel/pint": "^1.13",

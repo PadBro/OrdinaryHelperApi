@@ -17,6 +17,7 @@ class FaqController extends Controller
     {
         return QueryBuilder::for(Faq::class)
             ->allowedFilters([
+                'question',
                 AllowedFilter::exact('id'),
             ])
             ->getOrPaginate();
