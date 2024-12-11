@@ -8,6 +8,7 @@ use App\Models\ReactionRole;
 use App\Http\Requests\StoreReactionRoleRequest;
 use App\Http\Requests\UpdateReactionRoleRequest;
 use App\Rules\DiscordMessageRule;
+use Illuminate\Support\Facades\Http;
 
 class ReactionRoleController extends Controller
 {
@@ -21,6 +22,7 @@ class ReactionRoleController extends Controller
                 AllowedFilter::exact('id'),
                 AllowedFilter::exact('emoji'),
                 AllowedFilter::exact('message_id'),
+                AllowedFilter::exact('channel_id'),
             ])
             ->getOrPaginate();
     }
@@ -31,10 +33,23 @@ class ReactionRoleController extends Controller
     public function store(StoreReactionRoleRequest $request)
     {
         list(, $channelId, $messageId) = DiscordMessageRule::splitMessageLink($request->validated('message_link'));
+        $urlEmoji = str_replace("<", "", $request->validated("emoji"));
+        $urlEmoji = str_replace(">", "", $urlEmoji);
+        $urlEmoji = urlencode($urlEmoji);
+        $response = Http::discordBot()->put("/channels/".$channelId."/messages/".$messageId."/reactions/".$urlEmoji."/@me");
+        if (!$response->successful()) {
+            response([
+                "errors" => [
+                    "reaction" => ["Failed to create reaction."]
+                ]
+            ], 400);
+        }
+
+
         return ReactionRole::create([
             ...$request->validated(),
-            "message_id" => $channelId,
-            "channel_id" => $messageId,
+            "message_id" => $messageId,
+            "channel_id" => $channelId,
         ]);
     }
 
@@ -46,8 +61,8 @@ class ReactionRoleController extends Controller
         list(, $channelId, $messageId) = DiscordMessageRule::splitMessageLink($request->validated('message_link'));
         $reactionRole->update([
             ...$request->validated(),
-            "message_id" => $channelId,
-            "channel_id" => $messageId,
+            "message_id" => $messageId,
+            "channel_id" => $channelId,
         ]);
         return $reactionRole->refresh();
     }
@@ -57,6 +72,10 @@ class ReactionRoleController extends Controller
      */
     public function destroy(ReactionRole $reactionRole)
     {
+        $urlEmoji = str_replace("<", "", $reactionRole->emoji);
+        $urlEmoji = str_replace(">", "", $urlEmoji);
+        $urlEmoji = urlencode($urlEmoji);
+        Http::discordBot()->delete("/channels/".$reactionRole->channel_id."/messages/".$reactionRole->message_id."/reactions/".$urlEmoji."/@me");
         return $reactionRole->delete();
     }
 }

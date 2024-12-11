@@ -16,7 +16,10 @@ class RuleController extends Controller
     public function index()
     {
         return QueryBuilder::for(Rule::class)
+            ->defaultSort('number')
+            ->allowedSorts('number')
             ->allowedFilters([
+                'name',
                 AllowedFilter::exact('id'),
             ])
             ->getOrPaginate();

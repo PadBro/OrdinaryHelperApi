@@ -1,0 +1,19 @@
+layout {
+    pane split_direction="Vertical" {
+        pane split_direction="Horizontal" {
+            pane command="docker" name="docker startup" {
+                args "compose" "up" "-d"
+            }
+            pane command="php" name="artisan serve" {
+                args "artisan" "serve"
+            }
+        }
+        pane split_direction="Horizontal" {
+            pane command="php" name="dump server" {
+                args "artisan" "dump"
+            }
+        }
+    }
+}
+session_name "OrdinaryApi"
+attach_to_session true
