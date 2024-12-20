@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Http;
 
 class EmojiRule implements ValidationRule
 {
-    private $discordEmojiRegex = "/^<.+:([0-9]+)>$/";
+    private string $discordEmojiRegex = '/^<.+:([0-9]+)>$/';
 
     /**
      * Run the validation rule.
@@ -26,8 +26,9 @@ class EmojiRule implements ValidationRule
 
             $response = Http::discordBot()->get('/guilds/'.config('services.discord.server_id').'/emojis');
             $guildEmojis = $response->json();
-            if (!is_array($guildEmojis)) {
-                $fail("could not validate :attribute");
+            if (! is_array($guildEmojis)) {
+                $fail('could not validate :attribute');
+
                 return;
             }
 
@@ -38,6 +39,6 @@ class EmojiRule implements ValidationRule
             }
         }
 
-        $fail(":attribute must be a valid emoji");
+        $fail(':attribute must be a valid emoji');
     }
 }

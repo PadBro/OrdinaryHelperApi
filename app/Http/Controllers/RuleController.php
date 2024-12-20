@@ -2,18 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use Spatie\QueryBuilder\AllowedFilter;
-use Spatie\QueryBuilder\QueryBuilder;
-use App\Models\Rule;
 use App\Http\Requests\StoreRuleRequest;
 use App\Http\Requests\UpdateRuleRequest;
+use App\Models\Rule;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class RuleController extends Controller
 {
     /**
      * Display a listing of the resource.
+     *
+     * @return Collection<int, Rule>|LengthAwarePaginator<Rule>
      */
-    public function index()
+    public function index(): Collection|LengthAwarePaginator
     {
         return QueryBuilder::for(Rule::class)
             ->defaultSort('number')
@@ -28,7 +32,7 @@ class RuleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRuleRequest $request)
+    public function store(StoreRuleRequest $request): Rule
     {
         return Rule::create($request->validated());
     }
@@ -36,17 +40,18 @@ class RuleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRuleRequest $request, Rule $rule)
+    public function update(UpdateRuleRequest $request, Rule $rule): Rule
     {
         $rule->update($request->validated());
+
         return $rule->refresh();
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Rule $rule)
+    public function destroy(Rule $rule): bool
     {
-        return $rule->delete();
+        return $rule->delete() ?? false;
     }
 }

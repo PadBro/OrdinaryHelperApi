@@ -2,33 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    public function login(LoginRequest $request)
+    public function login(LoginRequest $request): JsonResponse
     {
         $request->authenticate();
 
-        $request->session()->regenerate();
+        session()->regenerate();
 
         return response()->json([]);
     }
 
-    public function logout(Request $request): JsonResponse
+    public function logout(): JsonResponse
     {
         Auth::guard('web')->logout();
 
-        $request->session()->invalidate();
+        session()->invalidate();
 
-        $request->session()->regenerateToken();
+        session()->regenerateToken();
 
         return response()->json([
-            'message' => 'Successfully logged out'
+            'message' => 'Successfully logged out',
         ]);
     }
 }
-

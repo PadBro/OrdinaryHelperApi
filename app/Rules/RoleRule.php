@@ -8,8 +8,10 @@ use Illuminate\Support\Facades\Http;
 
 class RoleRule implements ValidationRule
 {
-    public $discordChannelLinkBase = 'https://discord.com/channels/';
-    public $discordCanaryChannelLinkBase = 'https://canary.discord.com/channels/';
+    public string $discordChannelLinkBase = 'https://discord.com/channels/';
+
+    public string $discordCanaryChannelLinkBase = 'https://canary.discord.com/channels/';
+
     /**
      * Run the validation rule.
      *
@@ -17,14 +19,16 @@ class RoleRule implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (config("services.discord.server_id") === $value) {
-            $fail(":attribute can not be the @everyone role.");
+        if (config('services.discord.server_id') === $value) {
+            $fail(':attribute can not be the @everyone role.');
+
             return;
         }
 
-        $response = Http::discordBot()->get("/guilds/".config("services.discord.server_id")."/roles/".$value);
-        if (!$response->successful()) {
-            $fail("The provided :attribute was not found.");
+        $response = Http::discordBot()->get('/guilds/'.config('services.discord.server_id').'/roles/'.$value);
+        if (! $response->successful()) {
+            $fail('The provided :attribute was not found.');
+
             return;
         }
     }

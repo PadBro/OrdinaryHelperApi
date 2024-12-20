@@ -2,31 +2,34 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\JsonResponse;
-use Laravel\Socialite\Facades\Socialite;
-use App\Models\User;
 use Illuminate\Support\Facades\Http;
+use Laravel\Socialite\Facades\Socialite;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class DiscordController extends Controller
 {
-    public function redirect(Request $request)
+    public function redirect(): RedirectResponse
     {
         return Socialite::driver('discord')->redirect();
     }
+
     public function callback(Request $request): JsonResponse
     {
+        /** @phpstan-ignore method.notFound */
         $user = Socialite::driver('discord')->stateless()->user();
 
         $response = Http::discord($user->token)->get('/users/@me/guilds/'.config('services.discord.server_id').'/member');
         $json = $response->json();
 
-        if (!$json || !isset($json['roles'])) {
+        if (! $json || ! isset($json['roles'])) {
             abort(404);
         }
 
-        if (!in_array(config('services.discord.required_role'), $json['roles'])) {
+        if (! in_array(config('services.discord.required_role'), $json['roles'])) {
             abort(404);
         }
 

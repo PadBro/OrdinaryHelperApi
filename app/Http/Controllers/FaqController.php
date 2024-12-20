@@ -2,18 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use Spatie\QueryBuilder\AllowedFilter;
-use Spatie\QueryBuilder\QueryBuilder;
-use App\Models\Faq;
 use App\Http\Requests\StoreFaqRequest;
 use App\Http\Requests\UpdateFaqRequest;
+use App\Models\Faq;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class FaqController extends Controller
 {
     /**
      * Display a listing of the resource.
+     *
+     * @return Collection<int, Faq>|LengthAwarePaginator<Faq>
      */
-    public function index()
+    public function index(): Collection|LengthAwarePaginator
     {
         return QueryBuilder::for(Faq::class)
             ->allowedFilters([
@@ -26,7 +30,7 @@ class FaqController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreFaqRequest $request)
+    public function store(StoreFaqRequest $request): Faq
     {
         return Faq::create($request->validated());
     }
@@ -34,17 +38,18 @@ class FaqController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateFaqRequest $request, Faq $faq)
+    public function update(UpdateFaqRequest $request, Faq $faq): Faq
     {
         $faq->update($request->validated());
+
         return $faq->refresh();
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Faq $faq)
+    public function destroy(Faq $faq): bool
     {
-        return $faq->delete();
+        return $faq->delete() ?? false;
     }
 }

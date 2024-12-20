@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\EmojiRule;
 use App\Rules\DiscordMessageRule;
+use App\Rules\EmojiRule;
 use App\Rules\RoleRule;
 use Illuminate\Foundation\Http\FormRequest;
 

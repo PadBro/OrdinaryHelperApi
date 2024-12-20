@@ -8,11 +8,10 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(UpdateUserRequest $request, User $user): User
     {
         $user->password = Hash::make($request->password);
 
         return tap($user)->save();
     }
 }
-

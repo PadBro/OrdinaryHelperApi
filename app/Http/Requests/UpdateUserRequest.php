@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
 
@@ -12,7 +13,12 @@ class UpdateUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->route('user')->id === $this->user()->id;
+        /**
+         * @var ?User $routeUser
+         */
+        $routeUser = $this->route('user');
+
+        return $this->user() && $routeUser?->id === $this->user()->id;
     }
 
     /**
@@ -32,7 +38,7 @@ class UpdateUserRequest extends FormRequest
                     ->symbols()
                     ->uncompromised(),
                 'confirmed',
-            ]
+            ],
         ];
     }
 }
