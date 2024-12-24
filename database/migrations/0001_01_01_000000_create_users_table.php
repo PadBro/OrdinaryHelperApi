@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('avatar');
             $table->string('discord_token');
             $table->string('discord_refresh_token');
+            $table->string('password')->nullable();
             $table->timestamps();
         });
 

@@ -19,6 +19,7 @@ class User extends Authenticatable
      * The attributes that should be hidden for serialization.
      */
     protected $hidden = [
+        'password',
         'discord_token',
         'discord_refresh_token',
     ];

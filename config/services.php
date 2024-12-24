@@ -46,6 +46,7 @@ return [
 
         'server_id' => env('DISCORD_SERVER_ID'),
         'required_role' => env('DISCORD_REQUIRED_ROLE'),
+        'owner_role' => env('DISCORD_OWNER_ROLE'),
         'bot_token' => env('DISCORD_BOT_TOKEN'),
     ],
 ];
