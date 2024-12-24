@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\ApplicationResponse;
 
+use App\Enums\ApplicationResponseType;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
-class StoreRuleRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,9 +24,9 @@ class StoreRuleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'number' => 'required|min:1',
-            'name' => 'required|max:100',
-            'rule' => 'required|max:4095',
+            'type' => ['required', new Enum(ApplicationResponseType::class)],
+            'name' => 'required|string',
+            'response' => 'required|string',
         ];
     }
 }

@@ -11,7 +11,7 @@ test('can change password', function () {
     $this->assertFalse(Hash::check($newPassword, $user->password));
 
     $this->actingAs($user)
-        ->patchJson(route('users.update', $user), [
+        ->patchJson(route('user.update', $user), [
             'password' => $newPassword,
             'password_confirmation' => $newPassword,
         ])

@@ -1,13 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\ApplicationQuestion;
 
-use App\Rules\DiscordMessageRule;
-use App\Rules\EmojiRule;
-use App\Rules\RoleRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreReactionRoleRequest extends FormRequest
+class StoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,9 +22,9 @@ class StoreReactionRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'message_link' => ['required', 'string', new DiscordMessageRule],
-            'emoji' => ['required', 'string', new EmojiRule],
-            'role_id' => ['required', 'string', new RoleRule],
+            'question' => 'required|string',
+            'order' => 'required|integer',
+            'is_active' => 'required|boolean',
         ];
     }
 }

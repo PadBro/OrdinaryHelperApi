@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\ApplicationController;
+use App\Http\Controllers\ApplicationQuestionAnswerController;
+use App\Http\Controllers\ApplicationQuestionController;
+use App\Http\Controllers\ApplicationResponseController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BotTokenController;
 use App\Http\Controllers\DiscordController;
@@ -15,6 +19,10 @@ Route::middleware('auth:sanctum')->group(function () {
         'faq' => FaqController::class,
         'rule' => RuleController::class,
         'reaction-role' => ReactionRoleController::class,
+        'application' => ApplicationController::class,
+        'application-question' => ApplicationQuestionController::class,
+        'application-question-answer' => ApplicationQuestionAnswerController::class,
+        'application-response' => ApplicationResponseController::class,
     ]);
 
     Route::apiResource('user', UserController::class)->only(['update']);

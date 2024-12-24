@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Faq\StoreRequest;
-use App\Http\Requests\Faq\UpdateRequest;
-use App\Models\Faq;
+use App\Http\Requests\Application\StoreRequest;
+use App\Http\Requests\Application\UpdateRequest;
+use App\Models\Application;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
-class FaqController extends Controller
+class ApplicationController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return Collection<int, Faq>|LengthAwarePaginator<Faq>
+     * @return Collection<int, Application>|LengthAwarePaginator<Application>
      */
     public function index(): Collection|LengthAwarePaginator
     {
-        return QueryBuilder::for(Faq::class)
+        return QueryBuilder::for(Application::class)
             ->allowedFilters([
                 'question',
                 AllowedFilter::exact('id'),
@@ -30,26 +30,26 @@ class FaqController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRequest $request): Faq
+    public function store(StoreRequest $request): Application
     {
-        return Faq::create($request->validated());
+        return Application::create($request->validated());
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRequest $request, Faq $faq): Faq
+    public function update(UpdateRequest $request, Application $application): Application
     {
-        $faq->update($request->validated());
+        $application->update($request->validated());
 
-        return $faq->refresh();
+        return $application->refresh();
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Faq $faq): bool
+    public function destroy(Application $application): bool
     {
-        return $faq->delete() ?? false;
+        return $application->delete() ?? false;
     }
 }

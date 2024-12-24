@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreReactionRoleRequest;
-use App\Http\Requests\UpdateReactionRoleRequest;
+use App\Http\Requests\ReactionRole\StoreRequest;
+use App\Http\Requests\ReactionRole\UpdateRequest;
 use App\Models\ReactionRole;
 use App\Rules\DiscordMessageRule;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -34,7 +34,7 @@ class ReactionRoleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreReactionRoleRequest $request): ReactionRole
+    public function store(StoreRequest $request): ReactionRole
     {
         [, $channelId, $messageId] = DiscordMessageRule::splitMessageLink($request->validated('message_link'));
         /**
@@ -62,7 +62,7 @@ class ReactionRoleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateReactionRoleRequest $request, ReactionRole $reactionRole): ReactionRole
+    public function update(UpdateRequest $request, ReactionRole $reactionRole): ReactionRole
     {
         [, $channelId, $messageId] = DiscordMessageRule::splitMessageLink($request->validated('message_link'));
         $reactionRole->update([

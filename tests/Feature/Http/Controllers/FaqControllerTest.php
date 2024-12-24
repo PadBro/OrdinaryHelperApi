@@ -8,7 +8,7 @@ test('auth user can get faqs', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user)
-        ->get(route('faqs.index'))
+        ->get(route('faq.index'))
         ->assertOk()
         ->assertJson(['data' => [$faq->toArray()]]);
 });
@@ -21,7 +21,7 @@ test('can create faq', function () {
     ];
 
     $this->actingAs($user)
-        ->postJson(route('faqs.store'), $data)
+        ->postJson(route('faq.store'), $data)
         ->assertCreated()
         ->assertJson($data);
 
@@ -37,7 +37,7 @@ test('can update faq', function () {
     ];
 
     $this->actingAs($user)
-        ->patchJson(route('faqs.update', $faq), $data)
+        ->patchJson(route('faq.update', $faq), $data)
         ->assertOk()
         ->assertJson($data);
 
@@ -49,7 +49,7 @@ test('can delete faq', function () {
     $faq = Faq::factory()->create();
 
     $this->actingAs($user)
-        ->deleteJson(route('faqs.destroy', $faq))
+        ->deleteJson(route('faq.destroy', $faq))
         ->assertOk();
 
     $this->assertDatabaseMissing('faqs', $faq->toArray());

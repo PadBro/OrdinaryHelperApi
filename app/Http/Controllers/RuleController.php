@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreRuleRequest;
-use App\Http\Requests\UpdateRuleRequest;
+use App\Http\Requests\Rule\StoreRequest;
+use App\Http\Requests\Rule\UpdateRequest;
 use App\Models\Rule;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -32,7 +32,7 @@ class RuleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRuleRequest $request): Rule
+    public function store(StoreRequest $request): Rule
     {
         return Rule::create($request->validated());
     }
@@ -40,7 +40,7 @@ class RuleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRuleRequest $request, Rule $rule): Rule
+    public function update(UpdateRequest $request, Rule $rule): Rule
     {
         $rule->update($request->validated());
 

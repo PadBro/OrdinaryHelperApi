@@ -8,7 +8,7 @@ test('auth user can get rules', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user)
-        ->get(route('rules.index'))
+        ->get(route('rule.index'))
         ->assertOk()
         ->assertJson(['data' => [$rule->toArray()]]);
 });
@@ -22,7 +22,7 @@ test('can create rule', function () {
     ];
 
     $this->actingAs($user)
-        ->postJson(route('rules.store'), $data)
+        ->postJson(route('rule.store'), $data)
         ->assertCreated()
         ->assertJson($data);
 
@@ -39,7 +39,7 @@ test('can update rule', function () {
     ];
 
     $this->actingAs($user)
-        ->patchJson(route('rules.update', $rule), $data)
+        ->patchJson(route('rule.update', $rule), $data)
         ->assertOk()
         ->assertJson($data);
 
@@ -51,7 +51,7 @@ test('can delete rule', function () {
     $rule = Rule::factory()->create();
 
     $this->actingAs($user)
-        ->deleteJson(route('rules.destroy', $rule))
+        ->deleteJson(route('rule.destroy', $rule))
         ->assertOk();
 
     $this->assertDatabaseMissing('rules', $rule->toArray());

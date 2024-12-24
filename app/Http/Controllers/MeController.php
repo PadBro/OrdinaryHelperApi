@@ -39,8 +39,9 @@ class MeController extends Controller
             return response()->json();
         }
 
-        $user->is_owner = in_array(config('services.discord.owner_role'), $discordGuildUser['roles']);
-
-        return response()->json($user);
+        return response()->json([
+            ...$user->toArray(),
+            'is_owner' => in_array(config('services.discord.owner_role'), $discordGuildUser['roles']),
+        ]);
     }
 }
