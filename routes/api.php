@@ -11,6 +11,8 @@ use App\Http\Controllers\FaqController;
 use App\Http\Controllers\MeController;
 use App\Http\Controllers\ReactionRoleController;
 use App\Http\Controllers\RuleController;
+use App\Http\Controllers\ServerContentController;
+use App\Http\Controllers\ServerContentMessageController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,9 +25,12 @@ Route::middleware('auth:sanctum')->group(function () {
         'application-question' => ApplicationQuestionController::class,
         'application-question-answer' => ApplicationQuestionAnswerController::class,
         'application-response' => ApplicationResponseController::class,
-    ]);
+        'server-content' => ServerContentController::class,
+    ], ['except' => ['show']]);
+    Route::get('server-content/resend', [ServerContentController::class, 'resend'])->name('logout');
 
     Route::apiResource('user', UserController::class)->only(['update']);
+    Route::resource('server-content-message', ServerContentMessageController::class)->only(['index', 'store']);
 
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 

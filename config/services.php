@@ -48,5 +48,7 @@ return [
         'required_role' => env('DISCORD_REQUIRED_ROLE'),
         'owner_role' => env('DISCORD_OWNER_ROLE'),
         'bot_token' => env('DISCORD_BOT_TOKEN'),
+
+        'server_content_channel' => env('DISCORD_SERVER_CONTENT_CHANNEL'),
     ],
 ];
