@@ -27,7 +27,7 @@ Route::middleware('auth:sanctum')->group(function () {
         'application-response' => ApplicationResponseController::class,
         'server-content' => ServerContentController::class,
     ], ['except' => ['show']]);
-    Route::get('server-content/resend', [ServerContentController::class, 'resend'])->name('logout');
+    Route::get('server-content/resend', [ServerContentController::class, 'resend'])->name('server-content.resend');
 
     Route::apiResource('user', UserController::class)->only(['update']);
     Route::resource('server-content-message', ServerContentMessageController::class)->only(['index', 'store']);
