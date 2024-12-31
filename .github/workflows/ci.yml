@@ -1,0 +1,95 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read # for checkout
+
+jobs:
+  commitlint:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: v22.2.0
+      - name: Install commitlint
+        run: yarn add commitlint@latest conventional-changelog-conventionalcommits @commitlint/config-conventional
+      - name: Validate current commit (last commit) with commitlint
+        if: github.event_name == 'push'
+        run: npx commitlint --last --verbose
+      - name: Validate PR commits with commitlint
+        if: github.event_name == 'pull_request'
+        run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
+
+  validate:
+    runs-on: ubuntu-latest
+    services:
+      mariadb:
+        image: mariadb:10.6.18
+        env:
+          MARIADB_USER: api
+          MARIADB_PASSWORD: api
+          MARIADB_DATABASE: api
+          MARIADB_ROOT_PASSWORD: api
+        ports:
+        - 3306:3306
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+      - name: Run pint
+        run: ./vendor/bin/pint --test
+      - name: Run phpstan
+        run: ./vendor/bin/phpstan analyse --memory-limit 2G
+      - name: Setup PHP with Xdebug
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: xdebug
+      - name: Run tests
+        run: |
+          echo "APP_KEY=" > .env
+          php artisan key:generate
+          php artisan test --coverage --min=50
+        env:
+          DB_CONNECTION: mysql
+          DB_PORT: 3306
+          DB_HOST: 127.0.0.1
+          DB_DATABASE: api
+          DB_USERNAME: api
+          DB_PASSWORD: api
+
+  release:
+    name: Release
+    if: github.ref == 'refs/heads/main'
+    needs: [commitlint, validate]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      id-token: write
+    outputs:
+      version: ${{ steps.semantic-release.outputs.new_release_version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Semantic Release
+        uses: cycjimmy/semantic-release-action@v4
+        id: semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
