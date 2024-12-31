@@ -97,7 +97,7 @@ class ServerContentController extends Controller
     private function getMessages(string $message, Collection $serverContents): array
     {
         $mapFunction = function ($data) {
-            return "- [".$data['name']."](".$data['url'].")\n  - ".$data['description'];
+            return '- ['.$data['name'].']('.$data['url'].")\n  - ".$data['description'];
         };
 
         $messages = [
