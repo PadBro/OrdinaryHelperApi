@@ -20,8 +20,10 @@ class ApplicationQuestionController extends Controller
     public function index(): Collection|LengthAwarePaginator
     {
         return QueryBuilder::for(ApplicationQuestion::class)
+            ->defaultSort('order')
+            ->allowedSorts('order')
             ->allowedFilters([
-                'question',
+                AllowedFilter::exact('is_active'),
                 AllowedFilter::exact('id'),
             ])
             ->getOrPaginate();
