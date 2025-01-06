@@ -22,9 +22,9 @@ class CreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'heading' => 'required|max:1024',
-            'not_recommended' => 'required|max:1024',
-            'recommended' => 'required|max:1024',
+            'heading' => 'required|max:2000',
+            'not_recommended' => 'required|max:2000',
+            'recommended' => 'required|max:2000',
         ];
     }
 }
