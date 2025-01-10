@@ -49,4 +49,12 @@ class DiscordController extends Controller
 
         return response()->json([], 204);
     }
+
+    public function textChannels(): JsonResponse
+    {
+        $response = Http::discordBot()->get('/guilds/'.config('services.discord.server_id').'/channels');
+        $textChannels = $response->collect()->filter(fn ($channel) => $channel['type'] === 0);
+
+        return response()->json($textChannels->values()->toArray(), 200);
+    }
 }

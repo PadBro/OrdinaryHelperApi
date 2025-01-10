@@ -58,33 +58,42 @@ class ServerContentController extends Controller
 
     public function resend(): bool
     {
-        /**
-         * @var ServerContent $messages
-         */
+        $data = request()->validate([
+            'channel_id' => ['required', 'string'],
+        ]);
+
         $messages = ServerContentMessage::where('server_id', config('services.discord.server_id'))->first();
         $notRecommended = ServerContent::notRecommended()->get();
         $recommended = ServerContent::recommended()->get();
 
-        $channelId = config('services.discord.server_content_channel');
+        if (! $messages) {
+            abort(400, 'No messages available');
+        }
+
+        $channelId = $data['channel_id'];
 
         Http::discordBot()->post('/channels/'.$channelId.'/messages', [
             'content' => $messages->heading,
         ]);
 
-        $notRecommendedMessages = $this->getMessages($messages->not_recommended, $notRecommended);
-        foreach ($notRecommendedMessages as $notRecommendedMessage) {
-            Http::discordBot()->post('/channels/'.$channelId.'/messages', [
-                'content' => $notRecommendedMessage,
-                'flags' => 4,
-            ]);
+        if ($notRecommended->count()) {
+            $notRecommendedMessages = $this->getMessages($messages->not_recommended, $notRecommended);
+            foreach ($notRecommendedMessages as $notRecommendedMessage) {
+                Http::discordBot()->post('/channels/'.$channelId.'/messages', [
+                    'content' => $notRecommendedMessage,
+                    'flags' => 4,
+                ]);
+            }
         }
 
-        $recommendedMessages = $this->getMessages($messages->recommended, $recommended);
-        foreach ($recommendedMessages as $recommendedMessage) {
-            Http::discordBot()->post('/channels/'.$channelId.'/messages', [
-                'content' => $recommendedMessage,
-                'flags' => 4,
-            ]);
+        if ($recommended->count()) {
+            $recommendedMessages = $this->getMessages($messages->recommended, $recommended);
+            foreach ($recommendedMessages as $recommendedMessage) {
+                Http::discordBot()->post('/channels/'.$channelId.'/messages', [
+                    'content' => $recommendedMessage,
+                    'flags' => 4,
+                ]);
+            }
         }
 
         return true;
