@@ -14,6 +14,7 @@ use App\Http\Controllers\RuleController;
 use App\Http\Controllers\ServerContentController;
 use App\Http\Controllers\ServerContentMessageController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VanityRoleController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -26,6 +27,7 @@ Route::middleware('auth:sanctum')->group(function () {
         'application-question-answer' => ApplicationQuestionAnswerController::class,
         'application-response' => ApplicationResponseController::class,
         'server-content' => ServerContentController::class,
+        'vanity-role' => VanityRoleController::class,
     ], ['except' => ['show']]);
 
     Route::post('server-content/resend', [ServerContentController::class, 'resend'])->name('server-content.resend');

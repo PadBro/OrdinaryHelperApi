@@ -41,13 +41,13 @@ class AppServiceProvider extends ServiceProvider
 
             return Http::withHeaders([
                 'Authorization' => 'Bearer '.$bearerToken,
-            ])->baseUrl('https://discord.com/api/v10');
+            ])->baseUrl(config('services.discord.api_url'));
         });
 
         Http::macro('discordBot', function () {
             return Http::withHeaders([
                 'Authorization' => 'Bot '.config('services.discord.bot_token'),
-            ])->baseUrl('https://discord.com/api/v10');
+            ])->baseUrl(config('services.discord.api_url'));
         });
     }
 }

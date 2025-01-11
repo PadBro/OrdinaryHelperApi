@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('server_contents', function (Blueprint $table) {
+        Schema::create('vanity_roles', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 128);
-            $table->string('url', 256);
-            $table->string('description', 512);
-            $table->boolean('is_recommended');
+            $table->string('role_id');
+            $table->string('vanity_url_code', 20);
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('server_contents');
+        Schema::dropIfExists('vanity_roles');
     }
 };
