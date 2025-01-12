@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Repositories\DiscordRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,6 +13,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class DiscordController extends Controller
 {
+    public function __construct(
+        protected DiscordRepository $discordRepository
+    ) {}
+
     public function redirect(): RedirectResponse
     {
         return Socialite::driver('discord')->redirect();
@@ -52,9 +57,17 @@ class DiscordController extends Controller
 
     public function textChannels(): JsonResponse
     {
-        $response = Http::discordBot()->get('/guilds/'.config('services.discord.server_id').'/channels');
-        $textChannels = $response->collect()->filter(fn ($channel) => $channel['type'] === 0);
+        return response()->json(
+            $this->discordRepository->textChannels()->values()->toArray(),
+            200
+        );
+    }
 
-        return response()->json($textChannels->values()->toArray(), 200);
+    public function roles(): JsonResponse
+    {
+        return response()->json(
+            $this->discordRepository->roles(),
+            200
+        );
     }
 }

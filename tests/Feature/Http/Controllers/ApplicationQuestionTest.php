@@ -24,7 +24,7 @@ test('can create application question', function () {
     $this->actingAs($user)
         ->postJson(route('application-question.store'), $data)
         ->assertCreated()
-        ->assertJson($data);
+        ->assertJson(['data' => $data]);
 
     $this->assertDatabaseHas('application_questions', $data);
 });
@@ -41,7 +41,7 @@ test('can update application question', function () {
     $this->actingAs($user)
         ->patchJson(route('application-question.update', $applicationQuestion), $data)
         ->assertOk()
-        ->assertJson($data);
+        ->assertJson(['data' => $data]);
 
     $this->assertDatabaseHas('application_questions', $data);
 });

@@ -25,7 +25,7 @@ test('can create server content', function () {
     $this->actingAs($user)
         ->postJson(route('server-content.store'), $data)
         ->assertCreated()
-        ->assertJson($data);
+        ->assertJson(['data' => $data]);
 
     $this->assertDatabaseHas('server_contents', $data);
 });
@@ -43,7 +43,7 @@ test('can update server content', function () {
     $this->actingAs($user)
         ->patchJson(route('server-content.update', $serverContent), $data)
         ->assertOk()
-        ->assertJson($data);
+        ->assertJson(['data' => $data]);
 
     $this->assertDatabaseHas('server_contents', $data);
 });

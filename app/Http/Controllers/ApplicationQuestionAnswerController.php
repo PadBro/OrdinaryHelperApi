@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ApplicationQuestionAnswer\StoreRequest;
 use App\Http\Requests\ApplicationQuestionAnswer\UpdateRequest;
+use App\Http\Resources\ApplicationQuestionAnswerResource;
 use App\Models\ApplicationQuestionAnswer;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -14,35 +14,35 @@ class ApplicationQuestionAnswerController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return Collection<int, ApplicationQuestionAnswer>|LengthAwarePaginator<ApplicationQuestionAnswer>
      */
-    public function index(): Collection|LengthAwarePaginator
+    public function index(): AnonymousResourceCollection
     {
-        return QueryBuilder::for(ApplicationQuestionAnswer::class)
+        $applicationQuestionAnswer = QueryBuilder::for(ApplicationQuestionAnswer::class)
             ->allowedFilters([
                 'question',
                 AllowedFilter::exact('id'),
             ])
             ->getOrPaginate();
+
+        return ApplicationQuestionAnswerResource::collection($applicationQuestionAnswer);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRequest $request): ApplicationQuestionAnswer
+    public function store(StoreRequest $request): ApplicationQuestionAnswerResource
     {
-        return ApplicationQuestionAnswer::create($request->validated());
+        return new ApplicationQuestionAnswerResource(ApplicationQuestionAnswer::create($request->validated()));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRequest $request, ApplicationQuestionAnswer $applicationQuestionAnswer): ApplicationQuestionAnswer
+    public function update(UpdateRequest $request, ApplicationQuestionAnswer $applicationQuestionAnswer): ApplicationQuestionAnswerResource
     {
         $applicationQuestionAnswer->update($request->validated());
 
-        return $applicationQuestionAnswer->refresh();
+        return new ApplicationQuestionAnswerResource($applicationQuestionAnswer->refresh());
     }
 
     /**

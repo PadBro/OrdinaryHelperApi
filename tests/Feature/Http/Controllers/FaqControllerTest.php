@@ -23,7 +23,7 @@ test('can create faq', function () {
     $this->actingAs($user)
         ->postJson(route('faq.store'), $data)
         ->assertCreated()
-        ->assertJson($data);
+        ->assertJson(['data' => $data]);
 
     $this->assertDatabaseHas('faqs', $data);
 });
@@ -39,7 +39,7 @@ test('can update faq', function () {
     $this->actingAs($user)
         ->patchJson(route('faq.update', $faq), $data)
         ->assertOk()
-        ->assertJson($data);
+        ->assertJson(['data' => $data]);
 
     $this->assertDatabaseHas('faqs', $data);
 });

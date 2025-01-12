@@ -24,7 +24,7 @@ test('can create rule', function () {
     $this->actingAs($user)
         ->postJson(route('rule.store'), $data)
         ->assertCreated()
-        ->assertJson($data);
+        ->assertJson(['data' => $data]);
 
     $this->assertDatabaseHas('rules', $data);
 });
@@ -41,7 +41,7 @@ test('can update rule', function () {
     $this->actingAs($user)
         ->patchJson(route('rule.update', $rule), $data)
         ->assertOk()
-        ->assertJson($data);
+        ->assertJson(['data' => $data]);
 
     $this->assertDatabaseHas('rules', $data);
 });

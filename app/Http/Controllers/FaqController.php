@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Faq\StoreRequest;
 use App\Http\Requests\Faq\UpdateRequest;
+use App\Http\Resources\FaqResource;
 use App\Models\Faq;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -14,35 +14,35 @@ class FaqController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return Collection<int, Faq>|LengthAwarePaginator<Faq>
      */
-    public function index(): Collection|LengthAwarePaginator
+    public function index(): AnonymousResourceCollection
     {
-        return QueryBuilder::for(Faq::class)
+        $faqs = QueryBuilder::for(Faq::class)
             ->allowedFilters([
                 'question',
                 AllowedFilter::exact('id'),
             ])
             ->getOrPaginate();
+
+        return FaqResource::collection($faqs);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRequest $request): Faq
+    public function store(StoreRequest $request): FaqResource
     {
-        return Faq::create($request->validated());
+        return new FaqResource(Faq::create($request->validated()));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRequest $request, Faq $faq): Faq
+    public function update(UpdateRequest $request, Faq $faq): FaqResource
     {
         $faq->update($request->validated());
 
-        return $faq->refresh();
+        return new FaqResource($faq);
     }
 
     /**

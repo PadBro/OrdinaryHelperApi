@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ReactionRole\StoreRequest;
 use App\Http\Requests\ReactionRole\UpdateRequest;
+use App\Http\Resources\ReactionRoleResource;
 use App\Models\ReactionRole;
 use App\Rules\DiscordMessageRule;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Http;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -16,12 +16,10 @@ class ReactionRoleController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return Collection<int, ReactionRole>|LengthAwarePaginator<ReactionRole>
      */
-    public function index(): Collection|LengthAwarePaginator
+    public function index(): AnonymousResourceCollection
     {
-        return QueryBuilder::for(ReactionRole::class)
+        $reactionRoles = QueryBuilder::for(ReactionRole::class)
             ->allowedFilters([
                 AllowedFilter::exact('id'),
                 AllowedFilter::exact('emoji'),
@@ -29,12 +27,14 @@ class ReactionRoleController extends Controller
                 AllowedFilter::exact('channel_id'),
             ])
             ->getOrPaginate();
+
+        return ReactionRoleResource::collection($reactionRoles);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRequest $request): ReactionRole
+    public function store(StoreRequest $request): ReactionRoleResource
     {
         [, $channelId, $messageId] = DiscordMessageRule::splitMessageLink($request->validated('message_link'));
         /**
@@ -52,17 +52,17 @@ class ReactionRoleController extends Controller
             ], 400);
         }
 
-        return ReactionRole::create([
+        return new ReactionRoleResource(ReactionRole::create([
             ...$request->validated(),
             'message_id' => $messageId,
             'channel_id' => $channelId,
-        ]);
+        ]));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRequest $request, ReactionRole $reactionRole): ReactionRole
+    public function update(UpdateRequest $request, ReactionRole $reactionRole): ReactionRoleResource
     {
         [, $channelId, $messageId] = DiscordMessageRule::splitMessageLink($request->validated('message_link'));
         $reactionRole->update([
@@ -71,7 +71,7 @@ class ReactionRoleController extends Controller
             'channel_id' => $channelId,
         ]);
 
-        return $reactionRole->refresh();
+        return new ReactionRoleResource($reactionRole->refresh());
     }
 
     /**

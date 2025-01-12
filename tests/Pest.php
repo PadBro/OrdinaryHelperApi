@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Http;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -13,7 +15,11 @@
 
 pest()->extend(Tests\TestCase::class)
     ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
-    ->in('Feature');
+    ->in('Feature', 'Unit');
+
+pest()->beforeEach(function () {
+    Http::preventStrayRequests();
+});
 
 /*
 |--------------------------------------------------------------------------

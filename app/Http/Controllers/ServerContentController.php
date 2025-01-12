@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ServerContent\StoreRequest;
 use App\Http\Requests\ServerContent\UpdateRequest;
+use App\Http\Resources\ServerContentResource;
 use App\Models\ServerContent;
 use App\Models\ServerContentMessage;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -16,36 +17,36 @@ class ServerContentController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return Collection<int, ServerContent>|LengthAwarePaginator<ServerContent>
      */
-    public function index(): Collection|LengthAwarePaginator
+    public function index(): AnonymousResourceCollection
     {
-        return QueryBuilder::for(ServerContent::class)
+        $serverContentResources = QueryBuilder::for(ServerContent::class)
             ->allowedFilters([
                 'name',
                 AllowedFilter::exact('is_recommended'),
                 AllowedFilter::exact('id'),
             ])
             ->getOrPaginate();
+
+        return ServerContentResource::collection($serverContentResources);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRequest $request): ServerContent
+    public function store(StoreRequest $request): ServerContentResource
     {
-        return ServerContent::create($request->validated());
+        return new ServerContentResource(ServerContent::create($request->validated()));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRequest $request, ServerContent $serverContent): ServerContent
+    public function update(UpdateRequest $request, ServerContent $serverContent): ServerContentResource
     {
         $serverContent->update($request->validated());
 
-        return $serverContent->refresh();
+        return new ServerContentResource($serverContent->refresh());
     }
 
     /**
