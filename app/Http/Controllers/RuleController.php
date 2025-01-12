@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Rule\StoreRequest;
 use App\Http\Requests\Rule\UpdateRequest;
+use App\Http\Resources\RuleResource;
 use App\Models\Rule;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -14,12 +14,10 @@ class RuleController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return Collection<int, Rule>|LengthAwarePaginator<Rule>
      */
-    public function index(): Collection|LengthAwarePaginator
+    public function index(): AnonymousResourceCollection
     {
-        return QueryBuilder::for(Rule::class)
+        $rules = QueryBuilder::for(Rule::class)
             ->defaultSort('number')
             ->allowedSorts('number')
             ->allowedFilters([
@@ -27,24 +25,26 @@ class RuleController extends Controller
                 AllowedFilter::exact('id'),
             ])
             ->getOrPaginate();
+
+        return RuleResource::collection($rules);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRequest $request): Rule
+    public function store(StoreRequest $request): RuleResource
     {
-        return Rule::create($request->validated());
+        return new RuleResource(Rule::create($request->validated()));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRequest $request, Rule $rule): Rule
+    public function update(UpdateRequest $request, Rule $rule): RuleResource
     {
         $rule->update($request->validated());
 
-        return $rule->refresh();
+        return new RuleResource($rule->refresh());
     }
 
     /**

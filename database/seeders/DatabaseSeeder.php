@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             ApplicationSeeder::class,
             FaqSeeder::class,
             RuleSeeder::class,
+            ReactionRoleSeeder::class,
         ]);
 
         User::factory()->create([

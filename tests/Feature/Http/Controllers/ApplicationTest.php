@@ -29,7 +29,7 @@ test('can create application', function () {
     $this->actingAs($user)
         ->postJson(route('application.store'), $data)
         ->assertCreated()
-        ->assertJson($data);
+        ->assertJson(['data' => $data]);
 
     $this->assertDatabaseHas('applications', $data);
 });
@@ -49,7 +49,7 @@ test('can update application', function () {
     $this->actingAs($user)
         ->patchJson(route('application.update', $application), $data)
         ->assertOk()
-        ->assertJson($data);
+        ->assertJson(['data' => $data]);
 
     $this->assertDatabaseHas('applications', $data);
 });

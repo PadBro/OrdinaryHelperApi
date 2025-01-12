@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ApplicationResponse\StoreRequest;
 use App\Http\Requests\ApplicationResponse\UpdateRequest;
+use App\Http\Resources\ApplicationResponseResource;
 use App\Models\ApplicationResponse;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -14,35 +14,35 @@ class ApplicationResponseController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return Collection<int, ApplicationResponse>|LengthAwarePaginator<ApplicationResponse>
      */
-    public function index(): Collection|LengthAwarePaginator
+    public function index(): AnonymousResourceCollection
     {
-        return QueryBuilder::for(ApplicationResponse::class)
+        $applicationResponse = QueryBuilder::for(ApplicationResponse::class)
             ->allowedFilters([
                 'question',
                 AllowedFilter::exact('id'),
             ])
             ->getOrPaginate();
+
+        return ApplicationResponseResource::collection($applicationResponse);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRequest $request): ApplicationResponse
+    public function store(StoreRequest $request): ApplicationResponseResource
     {
-        return ApplicationResponse::create($request->validated());
+        return new ApplicationResponseResource(ApplicationResponse::create($request->validated()));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRequest $request, ApplicationResponse $applicationResponse): ApplicationResponse
+    public function update(UpdateRequest $request, ApplicationResponse $applicationResponse): ApplicationResponseResource
     {
         $applicationResponse->update($request->validated());
 
-        return $applicationResponse->refresh();
+        return new ApplicationResponseResource($applicationResponse->refresh());
     }
 
     /**

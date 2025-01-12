@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ApplicationQuestion\StoreRequest;
 use App\Http\Requests\ApplicationQuestion\UpdateRequest;
+use App\Http\Resources\ApplicationQuestionResource;
 use App\Models\ApplicationQuestion;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -14,35 +14,35 @@ class ApplicationQuestionController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return Collection<int, ApplicationQuestion>|LengthAwarePaginator<ApplicationQuestion>
      */
-    public function index(): Collection|LengthAwarePaginator
+    public function index(): AnonymousResourceCollection
     {
-        return QueryBuilder::for(ApplicationQuestion::class)
+        $applicationQuestion = QueryBuilder::for(ApplicationQuestion::class)
             ->allowedFilters([
                 'question',
                 AllowedFilter::exact('id'),
             ])
             ->getOrPaginate();
+
+        return ApplicationQuestionResource::collection($applicationQuestion);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRequest $request): ApplicationQuestion
+    public function store(StoreRequest $request): ApplicationQuestionResource
     {
-        return ApplicationQuestion::create($request->validated());
+        return new ApplicationQuestionResource(ApplicationQuestion::create($request->validated()));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRequest $request, ApplicationQuestion $applicationQuestion): ApplicationQuestion
+    public function update(UpdateRequest $request, ApplicationQuestion $applicationQuestion): ApplicationQuestionResource
     {
         $applicationQuestion->update($request->validated());
 
-        return $applicationQuestion->refresh();
+        return new ApplicationQuestionResource($applicationQuestion->refresh());
     }
 
     /**

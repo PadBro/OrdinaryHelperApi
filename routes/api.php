@@ -37,6 +37,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('botToken', BotTokenController::class)->name('bot.token');
     Route::get('discord/text-channels', [DiscordController::class, 'textChannels']);
+    Route::get('discord/roles', [DiscordController::class, 'roles']);
 });
 
 Route::post('login', [AuthController::class, 'login'])->name('login');

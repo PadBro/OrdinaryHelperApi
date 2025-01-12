@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Http;
 
 class DiscordMessageRule implements ValidationRule
 {
-    private static string $discordChannelLinkBase = 'https://discord.com/channels/';
+    public static string $discordChannelLinkBase = 'https://discord.com/channels/';
 
-    private static string $discordCanaryChannelLinkBase = 'https://canary.discord.com/channels/';
+    public static string $discordCanaryChannelLinkBase = 'https://canary.discord.com/channels/';
 
     /**
      * Run the validation rule.

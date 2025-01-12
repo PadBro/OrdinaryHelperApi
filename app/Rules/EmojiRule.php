@@ -22,6 +22,7 @@ class EmojiRule implements ValidationRule
         }
 
         if (preg_match($this->discordEmojiRegex, $value, $matches)) {
+            dump(1);
             $emojiId = $matches[1];
 
             $response = Http::discordBot()->get('/guilds/'.config('services.discord.server_id').'/emojis');
@@ -38,6 +39,7 @@ class EmojiRule implements ValidationRule
                 }
             }
         }
+        dump(2);
 
         $fail(':attribute must be a valid emoji');
     }
