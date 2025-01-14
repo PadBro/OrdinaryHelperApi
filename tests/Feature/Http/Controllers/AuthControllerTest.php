@@ -3,7 +3,7 @@
 use App\Models\User;
 
 test('can login', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->owner()->create();
 
     $this->postJson(route('login'), [
         'name' => $user->name,
@@ -13,7 +13,7 @@ test('can login', function () {
 });
 
 test('can not login', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->owner()->create();
     $this->postJson(route('login'), [
         'name' => $user->name,
         'password' => '123',
@@ -22,7 +22,7 @@ test('can not login', function () {
 });
 
 test('can logout', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->owner()->create();
     $this->actingAs($user)
         ->postJson(route('logout'))
         ->assertOk();

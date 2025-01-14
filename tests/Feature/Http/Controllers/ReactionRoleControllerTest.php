@@ -10,7 +10,7 @@ test('auth user can get reaction roles', function () {
     ]);
 
     $reactionRole = ReactionRole::factory()->create();
-    $user = User::factory()->create();
+    $user = User::factory()->owner()->create();
 
     $this->actingAs($user)
         ->get(route('reaction-role.index'))
@@ -27,7 +27,7 @@ test('can create rule', function () {
         config('services.discord.api_url').'/guilds/*/emojis' => Http::response([['id' => '123']]),
     ]);
 
-    $user = User::factory()->create();
+    $user = User::factory()->owner()->create();
     $data = [
         'message_link' => 'https://discord.com/channels/123/456/789',
         'emoji' => '<emoji:123>',
@@ -57,7 +57,7 @@ test('can update rule', function () {
     ]);
 
     $reactionRole = ReactionRole::factory()->create();
-    $user = User::factory()->create();
+    $user = User::factory()->owner()->create();
     $data = [
         'message_link' => 'https://discord.com/channels/123/456/789',
         'emoji' => '<emoji:123>',
@@ -82,7 +82,7 @@ test('can delete rule', function () {
         config('services.discord.api_url').'/channels/*' => Http::response([]),
     ]);
 
-    $user = User::factory()->create();
+    $user = User::factory()->owner()->create();
     $reactionRole = ReactionRole::factory()->create();
 
     $this->actingAs($user)

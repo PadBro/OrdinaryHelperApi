@@ -9,6 +9,10 @@ class ServerContentMessageController extends Controller
 {
     public function index(): ?ServerContentMessage
     {
+        if (! request()->user()?->can('serverContentMessage.read')) {
+            abort(403);
+        }
+
         return ServerContentMessage::where('server_id', config('services.discord.server_id'))->first();
     }
 

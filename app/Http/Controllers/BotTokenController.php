@@ -9,6 +9,9 @@ class BotTokenController extends Controller
 {
     public function __invoke(): JsonResponse
     {
+        if (! request()->user()?->hasRole('Owner')) {
+            abort(403);
+        }
         $user = User::firstOrCreate([
             'name' => 'Discord Bot',
             'nickname' => 'Discord Bot',
@@ -17,6 +20,8 @@ class BotTokenController extends Controller
             'discord_token' => '',
             'discord_refresh_token' => '',
         ]);
+        $user->syncRoles('Bot');
+
         $user->tokens()->delete();
         $token = $user->createToken('Discord Bot');
 

@@ -6,7 +6,7 @@ use App\Models\User;
 
 test('auth user can get application response', function () {
     $application = ApplicationResponse::factory()->create();
-    $user = User::factory()->create();
+    $user = User::factory()->owner()->create();
 
     $this->actingAs($user)
         ->get(route('application-response.index'))
@@ -15,7 +15,7 @@ test('auth user can get application response', function () {
 });
 
 test('can create application response', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->owner()->create();
     $data = [
         'type' => ApplicationResponseType::Accepted->value,
         'name' => 'Test',
@@ -31,7 +31,7 @@ test('can create application response', function () {
 });
 
 test('can update application response', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->owner()->create();
     $application = ApplicationResponse::factory()->create();
     $data = [
         'type' => ApplicationResponseType::Accepted->value,
@@ -48,7 +48,7 @@ test('can update application response', function () {
 });
 
 test('can delete application response', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->owner()->create();
     $application = ApplicationResponse::factory()->create();
 
     $this->actingAs($user)

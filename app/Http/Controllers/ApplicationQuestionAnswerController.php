@@ -17,6 +17,9 @@ class ApplicationQuestionAnswerController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
+        if (! request()->user()?->can('applicationQuestionAnswer.read')) {
+            abort(403);
+        }
         $applicationQuestionAnswer = QueryBuilder::for(ApplicationQuestionAnswer::class)
             ->allowedFilters([
                 'question',
@@ -50,6 +53,10 @@ class ApplicationQuestionAnswerController extends Controller
      */
     public function destroy(ApplicationQuestionAnswer $applicationQuestionAnswer): bool
     {
+        if (! request()->user()?->can('applicationQuestionAnswer.delete')) {
+            abort(403);
+        }
+
         return $applicationQuestionAnswer->delete() ?? false;
     }
 }

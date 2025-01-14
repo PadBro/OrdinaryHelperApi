@@ -5,7 +5,7 @@ use App\Models\User;
 
 test('auth user can get application question', function () {
     $applicationQuestion = ApplicationQuestion::factory()->create();
-    $user = User::factory()->create();
+    $user = User::factory()->owner()->create();
 
     $this->actingAs($user)
         ->get(route('application-question.index'))
@@ -14,7 +14,7 @@ test('auth user can get application question', function () {
 });
 
 test('can create application question', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->owner()->create();
     $data = [
         'question' => 'Test',
         'order' => 1,
@@ -30,7 +30,7 @@ test('can create application question', function () {
 });
 
 test('can update application question', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->owner()->create();
     $applicationQuestion = ApplicationQuestion::factory()->create();
     $data = [
         'question' => 'Test',
@@ -47,7 +47,7 @@ test('can update application question', function () {
 });
 
 test('can delete application question', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->owner()->create();
     $applicationQuestion = ApplicationQuestion::factory()->create();
 
     $this->actingAs($user)

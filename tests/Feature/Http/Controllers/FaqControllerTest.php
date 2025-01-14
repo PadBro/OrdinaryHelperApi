@@ -5,7 +5,7 @@ use App\Models\User;
 
 test('auth user can get faqs', function () {
     $faq = Faq::factory()->create();
-    $user = User::factory()->create();
+    $user = User::factory()->owner()->create();
 
     $this->actingAs($user)
         ->get(route('faq.index'))
@@ -14,7 +14,7 @@ test('auth user can get faqs', function () {
 });
 
 test('can create faq', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->owner()->create();
     $data = [
         'question' => 'Is this a test?',
         'answer' => 'Yes, this is a test!',
@@ -29,7 +29,7 @@ test('can create faq', function () {
 });
 
 test('can update faq', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->owner()->create();
     $faq = Faq::factory()->create();
     $data = [
         'question' => 'Is this a test?',
@@ -45,7 +45,7 @@ test('can update faq', function () {
 });
 
 test('can delete faq', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->owner()->create();
     $faq = Faq::factory()->create();
 
     $this->actingAs($user)

@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\DiscordRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Http;
+use Spatie\Permission\Models\Role;
 
 class MeController extends Controller
 {
+    public function __construct(
+        protected DiscordRepository $discordRepository
+    ) {}
+
     /**
      * Get the current user.
      */
@@ -19,29 +24,37 @@ class MeController extends Controller
         if (! $user) {
             return response()->json();
         }
-        $discordGuildUser = Cache::remember('user-'.$user->id, 120, function () {
-            $response = Http::discord()->get('/users/@me/guilds/'.config('services.discord.server_id').'/member');
 
-            return $response->json();
-        });
+        $discordGuildUser = $this->discordRepository->currentUser();
 
-        if (! $discordGuildUser || ! isset($discordGuildUser['roles'])) {
+        $guild = $this->discordRepository->guild();
+
+        if (! isset($discordGuildUser['roles'])) {
             Cache::forget('user-'.$user->id);
             Auth::guard('web')->logout();
 
-            return response()->json();
+            abort(403, 'You oauth2 token expired. Please login with Discord');
         }
 
         if (! in_array(config('services.discord.required_role'), $discordGuildUser['roles'])) {
             Cache::forget('user-'.$user->id);
             Auth::guard('web')->logout();
 
-            return response()->json();
+            abort(403, 'You do not have the required permissions.');
         }
+
+        $roles = Role::whereIn('name', $discordGuildUser['roles'])->get()->pluck('name');
+
+        if ($guild['owner_id'] === $user->discord_id) {
+            $roles->push('Owner');
+        }
+
+        $user->syncRoles($roles);
 
         return response()->json([
             ...$user->toArray(),
-            'is_owner' => in_array(config('services.discord.owner_role'), $discordGuildUser['roles']),
+            'is_owner' => $guild['owner_id'] === $user->discord_id,
+            'permissions' => $user->getPermissionsViaRoles()->pluck('name'),
         ]);
     }
 }

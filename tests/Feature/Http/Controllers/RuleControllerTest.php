@@ -5,7 +5,7 @@ use App\Models\User;
 
 test('auth user can get rules', function () {
     $rule = Rule::factory()->create();
-    $user = User::factory()->create();
+    $user = User::factory()->owner()->create();
 
     $this->actingAs($user)
         ->get(route('rule.index'))
@@ -14,7 +14,7 @@ test('auth user can get rules', function () {
 });
 
 test('can create rule', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->owner()->create();
     $data = [
         'number' => '1',
         'name' => 'Testing',
@@ -30,7 +30,7 @@ test('can create rule', function () {
 });
 
 test('can update rule', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->owner()->create();
     $rule = Rule::factory()->create();
     $data = [
         'number' => '1',
@@ -47,7 +47,7 @@ test('can update rule', function () {
 });
 
 test('can delete rule', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->owner()->create();
     $rule = Rule::factory()->create();
 
     $this->actingAs($user)
