@@ -17,6 +17,9 @@ class FaqController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
+        if (! request()->user()?->can('faq.read')) {
+            abort(403);
+        }
         $faqs = QueryBuilder::for(Faq::class)
             ->allowedFilters([
                 'question',
@@ -50,6 +53,10 @@ class FaqController extends Controller
      */
     public function destroy(Faq $faq): bool
     {
+        if (! request()->user()?->can('faq.delete')) {
+            abort(403);
+        }
+
         return $faq->delete() ?? false;
     }
 }

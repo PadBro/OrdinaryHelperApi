@@ -20,6 +20,9 @@ class ServerContentController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
+        if (! request()->user()?->can('serverContent.read')) {
+            abort(403);
+        }
         $serverContentResources = QueryBuilder::for(ServerContent::class)
             ->allowedFilters([
                 'name',
@@ -54,11 +57,18 @@ class ServerContentController extends Controller
      */
     public function destroy(ServerContent $serverContent): bool
     {
+        if (! request()->user()?->can('serverContent.delete')) {
+            abort(403);
+        }
+
         return $serverContent->delete() ?? false;
     }
 
     public function resend(): bool
     {
+        if (! request()->user()?->can('serverContent.resend')) {
+            abort(403);
+        }
         $data = request()->validate([
             'channel_id' => ['required', 'string'],
         ]);

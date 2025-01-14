@@ -17,6 +17,9 @@ class RuleController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
+        if (! request()->user()?->can('rule.read')) {
+            abort(403);
+        }
         $rules = QueryBuilder::for(Rule::class)
             ->defaultSort('number')
             ->allowedSorts('number')
@@ -52,6 +55,10 @@ class RuleController extends Controller
      */
     public function destroy(Rule $rule): bool
     {
+        if (! request()->user()?->can('rule.delete')) {
+            abort(403);
+        }
+
         return $rule->delete() ?? false;
     }
 }

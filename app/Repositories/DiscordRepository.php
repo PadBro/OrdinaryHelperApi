@@ -52,4 +52,38 @@ class DiscordRepository
 
         return $textChannels;
     }
+
+    /**
+     * @return Collection<int, mixed>
+     */
+    public function guild(): Collection
+    {
+        /**
+         * @var array<array<mixed>>
+         */
+        $guild = Cache::remember('guild-'.config('services.discord.server_id'), 600, function () {
+            $response = Http::discordBot()->get('/guilds/'.config('services.discord.server_id'));
+
+            return $response->json();
+        });
+
+        return collect($guild);
+    }
+
+    /**
+     * @return Collection<int, mixed>
+     */
+    public function currentUser(): Collection
+    {
+        /**
+         * @var array<array<mixed>>
+         */
+        $currentUser = Cache::remember('user-'.auth()->user()?->id, 120, function () {
+            $response = Http::discord()->get('/users/@me/guilds/'.config('services.discord.server_id').'/member');
+
+            return $response->json();
+        });
+
+        return collect($currentUser);
+    }
 }

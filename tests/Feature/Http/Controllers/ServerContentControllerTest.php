@@ -5,7 +5,7 @@ use App\Models\User;
 
 test('auth user can get server contents', function () {
     $serverContent = ServerContent::factory()->create();
-    $user = User::factory()->create();
+    $user = User::factory()->owner()->create();
 
     $this->actingAs($user)
         ->get(route('server-content.index'))
@@ -14,7 +14,7 @@ test('auth user can get server contents', function () {
 });
 
 test('can create server content', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->owner()->create();
     $data = [
         'name' => 'Test',
         'url' => 'https://example.com',
@@ -31,7 +31,7 @@ test('can create server content', function () {
 });
 
 test('can update server content', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->owner()->create();
     $serverContent = ServerContent::factory()->create();
     $data = [
         'name' => 'Test',
@@ -49,7 +49,7 @@ test('can update server content', function () {
 });
 
 test('can delete server content', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->owner()->create();
     $serverContent = ServerContent::factory()->create();
 
     $this->actingAs($user)

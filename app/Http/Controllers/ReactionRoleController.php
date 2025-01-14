@@ -19,6 +19,9 @@ class ReactionRoleController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
+        if (! request()->user()?->can('reactionRole.read')) {
+            abort(403);
+        }
         $reactionRoles = QueryBuilder::for(ReactionRole::class)
             ->allowedFilters([
                 AllowedFilter::exact('id'),
@@ -79,6 +82,9 @@ class ReactionRoleController extends Controller
      */
     public function destroy(ReactionRole $reactionRole): bool
     {
+        if (! request()->user()?->can('reactionRole.delete')) {
+            abort(403);
+        }
         $urlEmoji = str_replace('<', '', $reactionRole->emoji);
         $urlEmoji = str_replace('>', '', $urlEmoji);
         $urlEmoji = urlencode($urlEmoji);
