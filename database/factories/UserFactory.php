@@ -35,4 +35,11 @@ class UserFactory extends Factory
             $user->assignRole('Owner');
         });
     }
+
+    public function bot(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            $user->assignRole('Bot');
+        });
+    }
 }

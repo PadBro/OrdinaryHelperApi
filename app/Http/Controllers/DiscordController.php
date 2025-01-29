@@ -63,6 +63,14 @@ class DiscordController extends Controller
         );
     }
 
+    public function categories(): JsonResponse
+    {
+        return response()->json(
+            $this->discordRepository->categories()->values()->toArray(),
+            200
+        );
+    }
+
     public function roles(): JsonResponse
     {
         return response()->json(

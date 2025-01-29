@@ -48,7 +48,19 @@ class DiscordRepository
     public function textChannels(): Collection
     {
         $channels = $this->channels();
+        dump($channels);
         $textChannels = $channels->filter(fn ($channel) => $channel['type'] === 0);
+
+        return $textChannels;
+    }
+
+    /**
+     * @return Collection<int, mixed>
+     */
+    public function categories(): Collection
+    {
+        $channels = $this->channels();
+        $textChannels = $channels->filter(fn ($channel) => $channel['type'] === 4);
 
         return $textChannels;
     }
@@ -85,5 +97,22 @@ class DiscordRepository
         });
 
         return collect($currentUser);
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function getUserById(string $userId): array
+    {
+        /**
+         * @var array<mixed>
+         */
+        $user = Cache::remember('discord-user-'.$userId, 60 * 60 * 24 * 7, function () use ($userId) { // save for 7 days
+            $response = Http::discordBot()->get('/users/'.$userId);
+
+            return $response->json();
+        });
+
+        return $user;
     }
 }

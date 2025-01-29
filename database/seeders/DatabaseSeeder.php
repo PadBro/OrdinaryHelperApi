@@ -18,6 +18,12 @@ class DatabaseSeeder extends Seeder
             FaqSeeder::class,
             RuleSeeder::class,
             ReactionRoleSeeder::class,
+            TicketConfigSeeder::class,
+            TicketPanelSeeder::class,
+            TicketSeeder::class,
+            TicketTeamSeeder::class,
+            TicketTranscriptSeeder::class,
+            TicketButtonSeeder::class,
         ]);
 
         User::factory()->create([
