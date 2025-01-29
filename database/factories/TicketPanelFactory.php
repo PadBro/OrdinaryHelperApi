@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ReactionRole>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\TicketPanel>
  */
-class ReactionRoleFactory extends Factory
+class TicketPanelFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,10 +17,10 @@ class ReactionRoleFactory extends Factory
     public function definition(): array
     {
         return [
-            'message_id' => (string) fake()->numberBetween(100000000000000000, 999999999999999999),
+            'title' => fake()->word(3),
+            'message' => fake()->sentence(3),
+            'embed_color' => '#123123',
             'channel_id' => (string) fake()->numberBetween(100000000000000000, 999999999999999999),
-            'emoji' => '<Test:100000000000000000>',
-            'role_id' => (string) fake()->numberBetween(100000000000000000, 999999999999999999),
         ];
     }
 }

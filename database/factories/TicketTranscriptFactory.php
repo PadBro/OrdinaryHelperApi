@@ -2,12 +2,13 @@
 
 namespace Database\Factories;
 
+use App\Models\Ticket;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ReactionRole>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\TicketTranscript>
  */
-class ReactionRoleFactory extends Factory
+class TicketTranscriptFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,10 +18,10 @@ class ReactionRoleFactory extends Factory
     public function definition(): array
     {
         return [
+            'ticket_id' => Ticket::factory(),
+            'discord_user_id' => (string) fake()->numberBetween(100000000000000000, 999999999999999999),
             'message_id' => (string) fake()->numberBetween(100000000000000000, 999999999999999999),
-            'channel_id' => (string) fake()->numberBetween(100000000000000000, 999999999999999999),
-            'emoji' => '<Test:100000000000000000>',
-            'role_id' => (string) fake()->numberBetween(100000000000000000, 999999999999999999),
+            'message' => fake()->paragraph(),
         ];
     }
 }

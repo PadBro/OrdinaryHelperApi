@@ -29,6 +29,12 @@ class CreateRequest extends FormRequest
         'applicationQuestion',
         'applicationAnswerQuestion',
         'applicationResponse',
+        'ticketConfig',
+        'ticket',
+        'ticketPanel',
+        'ticketTeam',
+        'ticketTranscript',
+        'ticketButton',
     ];
 
     /**
