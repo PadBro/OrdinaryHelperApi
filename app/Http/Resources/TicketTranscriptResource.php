@@ -20,7 +20,6 @@ class TicketTranscriptResource extends JsonResource
         $ticketTranscript = $this->resource;
 
         $ticketTranscriptRepository = new TicketTranscriptRepository(new DiscordRepository);
-        dump('123123123');
 
         return [
             ...$ticketTranscript->toArray(),
