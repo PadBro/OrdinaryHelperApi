@@ -48,7 +48,6 @@ class DiscordRepository
     public function textChannels(): Collection
     {
         $channels = $this->channels();
-        dump($channels);
         $textChannels = $channels->filter(fn ($channel) => $channel['type'] === 0);
 
         return $textChannels;
